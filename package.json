@@ -2,7 +2,7 @@
 	"name": "crater",
 	"displayName": "CraTer",
 	"description": "Extension CraTer is to identify whether or not the root cause (i.e., the faulty-code-line) of Java crashes reside in their stack traces.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "yongfenggu",
 	"icon": "images/icon.png",
 	"repository": {
@@ -50,19 +50,18 @@
 		"menus": {
 			"editor/context": [
 				{
-					"when":"editorFocus",
+					"when": "editorFocus",
 					"command": "crater.predict",
 					"group": "navigation"
 				},
 				{
-					"when":"editorFocus",
+					"when": "editorFocus",
 					"command": "crater.terminal",
 					"group": "navigation"
 				}
 			]
 		}
 	},
-	
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
