@@ -2,7 +2,10 @@
 
 All notable changes to the "crater" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+|Version|Date|Notes|
+|:--|:--|:--|
+|0.02|2021/1/23|Fix some bugs and optimize the CraTer results.|
+|0.01|2021/1/22|First version|
 
 ## [Unreleased]
 

@@ -69,22 +69,23 @@ export function activate(context: vscode.ExtensionContext) {
 		//// step-1: 获取编辑器所在的项目根目录的地址
 		let projectPath = vscode.workspace.getWorkspaceFolder(editor.document.uri)?.uri.fsPath + '/';
 		projectPath = projectPath.replace(/\\/gi, '\/');
-		// console.log('当前项目地址 : ' + projectPath);
+		console.log('Workspace    : ' + projectPath);
 
 		//// step-2: 将 Terminal 终端中的异常信息保存到堆栈迹文件中
 		//// __dirname = 'crater/out/';
 		let tracePath = path.resolve(__dirname, '../src/plugin/trace.txt');
 		tracePath = tracePath.replace(/\\/gi, '\/');
-		// console.log('  堆栈迹文件 : ' + tracePath);		
+		console.log('Stack trace  : ' + tracePath);		
 
 		//// step-3: 执行 crater-tool.jar 工具，并将结果展示在 WebView 中
 		let jarPath = path.resolve(__dirname, '../src/plugin/crater-tool.jar');
 		jarPath = jarPath.replace(/\\/gi, '\/');
 		var cmdStr = `java -jar ${jarPath} -projPath ${projectPath} -projStackTrace ${tracePath}`;
-		// console.log('CMD: ' + cmdStr);
+		console.log('Executed CMD : ' + cmdStr);
 
 		const process = require('child_process');
-		process.exec(cmdStr, {cwd:'C:/Users/yongfeng/Desktop/crater/src/plugin/'}, (err:any, stdout:any, stderr:any ) => {
+		let cwdPath = path.resolve(__dirname, '../src/plugin');
+		process.exec(cmdStr, {cwd:cwdPath}, (err:any, stdout:any, stderr:any ) => {
 			let panel = vscode.window.createWebviewPanel('CraTer', 'CraTer Result', vscode.ViewColumn.One);
 			panel.webview.html = getWebViewHTML(stdout, stderr);
 		});
@@ -116,6 +117,10 @@ export function getWebViewHTML(stdout: any, stderr: any): string{
 						<h3>3.Prediction Results: </h3>
 						<p>Oops, CraTer failed to make the prediction of this crash. Please try to check the format of arguments.</p></div>`;
 	}
+
+	tempHTML += `<hr><p style='color:gray'>* This results are for reference only, and the real position of the crashing fault may be not consistent with the prediction results.<br> 
+				* Visit the homepage of <a href='http://cstar.whu.edu.cn/p/crater/'>CraTer</a> or <a href='https://www.sciencedirect.com/science/article/pii/S0164121218302401'>paper</a>
+				for more details.</p>`;
 
 	return tempHTML;
 }
@@ -218,12 +223,19 @@ export function filterContent(text: string): string[]{
 	let content: string = text.split('Windows PowerShell')[1];
 
 	// 将 Terminal 内容按行分割
-	content = content.replace(/\r\n/g, '\\r');
-	content = content.replace(/\n/g, '\\r');
-	content = content.replace(/\n\r/g, '\\r'); 
+	if(content.indexOf('\r\n') !== -1){
+		content = content.replace(/\r\n/g, '\\r');
+	}
+	if(content.indexOf('\n') !== -1){
+		content = content.replace(/\n/g, '\\r');
+	}
+	if(content.indexOf('\n\r') !== -1){
+		content = content.replace(/\n\r/g, '\\r'); 
+	}
 	let lines: string[] = content.split('\\r');
 
-	if(lines.length < 1 || lines[1].startsWith('版权所有 (C) Microsoft Corporation。')){
+	if(lines.length < 1){
+		console.error('stack traces\' length is less than 1');
 		return new Array();
 	}
 

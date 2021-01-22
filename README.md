@@ -44,6 +44,10 @@ At this time, it is known that CraTer has the following issues:
 
 ## Release Notes
 
+### 0.0.2
+
+Fix some bugs and optimize the CraTer results.
+
 ### 0.0.1
 
 The initial release of CraTer which only focus on analyzing the Java crashes.

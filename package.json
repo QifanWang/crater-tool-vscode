@@ -13,8 +13,7 @@
 		"vscode": "^1.52.0"
 	},
 	"categories": [
-		"Testing",
-		"Programming Languages"
+		"Other"
 	],
 	"activationEvents": [
 		"onCommand:crater.predict",
