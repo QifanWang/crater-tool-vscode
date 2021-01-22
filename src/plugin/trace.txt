@@ -1,0 +1,4 @@
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 8
+	at example1.IDXExp.partition(IDXExp.java:36)
+	at example1.IDXExp.quick_sort(IDXExp.java:25)
+	at example1.IDXExp.main(IDXExp.java:15)
