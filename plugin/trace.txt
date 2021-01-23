@@ -1,0 +1,5 @@
+Exception in thread "main" java.lang.NullPointerException
+	at example2.NPExp.TransformTree(NPExp.java:52)
+	at example2.NPExp.TransformTree(NPExp.java:61)
+	at example2.NPExp.TransformTree(NPExp.java:61)
+	at example2.NPExp.main(NPExp.java:45)

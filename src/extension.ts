@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 声明命令 crater.terminal: 捕获 Terminal 中的内容
 	let terminalplay = vscode.commands.registerTextEditorCommand('crater.terminal', () => { 
-
+		
 		console.log('>> command crater.terminal is working');
 		if (options.get('enable') === false) {
 			console.log('Command has been disabled, not running');
@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		let tracePath = path.resolve(__dirname, '../src/plugin/trace.txt');
+		let tracePath = path.resolve(__dirname, '../plugin/trace.txt');
 		tracePath = tracePath.replace(/\\/gi, '\/');
 
 		if (options.get('useClipboard') === true) {
@@ -73,18 +73,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 		//// step-2: 将 Terminal 终端中的异常信息保存到堆栈迹文件中
 		//// __dirname = 'crater/out/';
-		let tracePath = path.resolve(__dirname, '../src/plugin/trace.txt');
+		let tracePath = path.resolve(__dirname, '../plugin/trace.txt');
 		tracePath = tracePath.replace(/\\/gi, '\/');
 		console.log('Stack trace  : ' + tracePath);		
 
 		//// step-3: 执行 crater-tool.jar 工具，并将结果展示在 WebView 中
-		let jarPath = path.resolve(__dirname, '../src/plugin/crater-tool.jar');
+		let jarPath = path.resolve(__dirname, '../plugin/crater-tool.jar');
 		jarPath = jarPath.replace(/\\/gi, '\/');
 		var cmdStr = `java -jar ${jarPath} -projPath ${projectPath} -projStackTrace ${tracePath}`;
 		console.log('Executed CMD : ' + cmdStr);
 
 		const process = require('child_process');
-		let cwdPath = path.resolve(__dirname, '../src/plugin');
+		let cwdPath = path.resolve(__dirname, '../plugin');
 		process.exec(cmdStr, {cwd:cwdPath}, (err:any, stdout:any, stderr:any ) => {
 			let panel = vscode.window.createWebviewPanel('CraTer', 'CraTer Result', vscode.ViewColumn.One);
 			panel.webview.html = getWebViewHTML(stdout, stderr);
@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-	vscode.window.showInformationMessage('您已经成功写在了 CraTer 插件，拜拜！');
+	vscode.window.showInformationMessage('您已经成功卸载了 CraTer 插件，拜拜！');
 }
 
 /**
@@ -173,37 +173,30 @@ function runCacheMode() {
 
 
 function runClipboardMode() {
-	// vscode.commands.executeCommand('workbench.action.terminal.selectAll').then(() => {
-	// 	vscode.commands.executeCommand('workbench.action.terminal.copySelection').then(() => {
-	// 		vscode.commands.executeCommand('workbench.action.terminal.clearSelection').then(() => {
-	// 			vscode.commands.executeCommand('workbench.action.files.newUntitledFile').then(() => {
-	// 				vscode.commands.executeCommand('editor.action.clipboardPasteAction');
-	// 			});
-	// 		});
-	// 	});
-	// });
-	
 
 	vscode.commands.executeCommand('workbench.action.terminal.selectAll').then(() => {
 		vscode.commands.executeCommand('workbench.action.terminal.copySelection').then(() => {
 			vscode.commands.executeCommand('workbench.action.terminal.clearSelection').then(() => {
 				vscode.env.clipboard.readText().then((text)=>{
-					let lines =  filterContent(text);
+					let lines =  getLastStackTraceFromTerminal(text);
 					// console.log(lines);
 					// console.log(lines.length);
 					if(lines.length === 0){
-						vscode.window.showInformationMessage('CraTer 提示：找不到终端中的 stack trace，请您先运行 Java 代码并生成相应的 Stack Trace');
+						vscode.window.showInformationMessage('CraTer：Terminal 中的没有 Stack trace！请您先运行 Java 代码并生成相应的 Stack Trace。');
 						return;
 					}else{
-						const fs = require('fs');
-						let tracePath = path.resolve(__dirname, '../src/plugin/trace.txt');
+						// 从剪切板中获得 Stack trace 
+						let tracePath = path.resolve(__dirname, '../plugin/trace.txt');
 						tracePath = tracePath.replace(/\\/gi, '\/');
-						// console.log(tracePath);
+						
 						let lastText = '';
 						for(var i=0; i<lines.length; i++){
 							lastText += lines[i] + '\n';
 						}
 						console.log(`copied stack trace: \n${lastText}`);
+						
+						// 将 Stack trace 写入 trace.txt 文件中去
+						const fs = require('fs');
 						fs.writeFile(tracePath, lastText, (err:any) => {
 							if(err){
 								console.error(err);
@@ -217,7 +210,13 @@ function runClipboardMode() {
 	});
 }
 
-export function filterContent(text: string): string[]{
+/**
+ * 将 Terminal 中的内容进行过滤，得到最后一次执行的 Stack trace 内容。
+ * 如果Terminal 中没有 Stack trace 文件，则返回一个空数组。
+ * @param text Terminal 中的内容
+ * @returns filteredContent, 最后一个 Stack trace 的所有行
+ */
+export function getLastStackTraceFromTerminal(text: string): string[]{
 	// 弃 Terminal 前半部的空行
 	let filteredContent: string[] = new Array();
 	let content: string = text.split('Windows PowerShell')[1];

@@ -40,9 +40,14 @@ This extension contributes the following settings:
 At this time, it is known that CraTer has the following issues:
 
 - CraTer only supports analyzing crashes of Java language, and other program languages will be supported in the next versions.
+- CraTer only focus on analyzing the code in the `src/` folder of your Java project. Hence, if your projects are built by Maven or Gradle, try to copy your code in the `src/` folder.
 - CraTer cannot analyze the 3rd-party libraries in the stack trace and may miss some valuable information about crashes, resulting in inaccurate prediction results or runtime crashes.
 
 ## Release Notes
+
+### 0.0.3
+
+Fix some bugs and reconstruct the architecture of the extesion
 
 ### 0.0.2
 
