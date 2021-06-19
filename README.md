@@ -5,7 +5,7 @@
 **CraTer** is a light-weight fault localization extension for Java programs. 
 Quite simply, when a program crashed, CraTer takes the Java program and corresponding crash stack trace as inputs and outputs whether or not the root-cause-line of the crash resides in the stack trace.
 
-This extension is developered by **Yongfeng Gu** and **Jifeng Xuan**. 
+This extension is developed by **[Yongfeng Gu](https://gu-youngfeng.github.io/)** and **[Jifeng Xuan](http://jifeng-xuan.com/index_cn.html)**.
 
 ## Usages
 
