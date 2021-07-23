@@ -219,7 +219,7 @@ function runClipboardMode() {
 export function getLastStackTraceFromTerminal(text: string): string[]{
 	// 弃 Terminal 前半部的空行
 	let filteredContent: string[] = new Array();
-	let content: string = text.split('Windows PowerShell')[1];
+	let content: string = text.substring(text.lastIndexOf("Exception in thread"));
 
 	// 将 Terminal 内容按行分割
 	if(content.indexOf('\r\n') !== -1){
