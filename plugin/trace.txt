@@ -1,6 +1,4 @@
-Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 1, Size: 0
-	at java.util.ArrayList.rangeCheck(ArrayList.java:653)
-	at java.util.ArrayList.get(ArrayList.java:429)
-	at IOBE.find_elem_by_idx(IOBE.java:27)
-	at IOBE.trigger_null_pointer_exp(IOBE.java:12)
-	at IOBE.main(IOBE.java:5)
+Exception in thread "main" java.lang.NullPointerException
+	at NPE.printString(NPE.java:14)
+	at NPE.print(NPE.java:10)
+	at NPE.main(NPE.java:19)

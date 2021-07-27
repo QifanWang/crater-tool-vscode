@@ -203,6 +203,7 @@ function runClipboardMode() {
 								return;
 							}
 						});
+						vscode.window.showInformationMessage(`CraTer：已经读取 Terminal 中的 Stack trace:\n${lastText}`);
 					}
 				});
 			});
