@@ -86,8 +86,20 @@ export function activate(context: vscode.ExtensionContext) {
 		const process = require('child_process');
 		let cwdPath = path.resolve(__dirname, '../plugin');
 		process.exec(cmdStr, {cwd:cwdPath}, (err:any, stdout:any, stderr:any ) => {
-			let panel = vscode.window.createWebviewPanel('CraTer', 'CraTer Result', vscode.ViewColumn.One);
-			panel.webview.html = getWebViewHTML(stdout, stderr);
+			let panel = vscode.window.createWebviewPanel(
+				'CraTer', 
+				'CraTer Result', 
+				vscode.ViewColumn.One,
+				{
+					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'css'))]
+				});
+			
+			const onDiskPath = vscode.Uri.file(
+				path.join(context.extensionPath, 'css', 'theme.css')
+			);
+			const styleSrc = panel.webview.asWebviewUri(onDiskPath);
+
+			panel.webview.html = getWebViewHTML(stdout, stderr, styleSrc);
 		});
 	});
 
@@ -103,12 +115,15 @@ export function deactivate() {
  * 返回 WebView 页面的 html 代码，如果运行 crater-tool.jar 成功则显示 stdout 结果，否则显示 stderr 的结果。
  * @param stdout 正常的输出
  * @param stderr 异常的输出
+ * @param styleSrc css 文件 uri
  * @returns tempHTML，WebView 页面的 html 内容
  */
-export function getWebViewHTML(stdout: any, stderr: any): string{
+export function getWebViewHTML(stdout: any, stderr: any, styleSrc: vscode.Uri): string{
 
 	let currTime = getFormatedTime();
-	let tempHTML = `<h1 style='color:#23a8f2;font-weight:bold;' title='Crash Detecter'>CraTer 预测结果</h1>	
+	let tempHTML = `<meta charset="UTF-8">
+					<link rel="stylesheet" type="text/css" href="${styleSrc}">
+					<h1 style='color:#23a8f2;font-weight:bold;' title='Crash Detecter'>CraTer 预测结果</h1>	
 					<p style='font-size:15px;'>本页面展示了 CraTer 的分析和预测结果 (<span style='color:gray;'>本次运行时间：${currTime}</span>)。</p>
 					<div style='font-size:15px'>${stdout}</div>`;  // 正常的结果
 
