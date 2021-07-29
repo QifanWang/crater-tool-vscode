@@ -15,13 +15,17 @@
 
 具体使用步骤如下，
 
-1. 在右键选项中选择 `Run` 。
+1. 在右键选项中选择 `Run Java` 。
 
 <img src="images/run.png" alt="run the program" width="700" height="400"/>
 
 2. 在右键选项中选择 `Capture this stack trace` 。
 
 <img src="images/capture.png" alt="run the program" width="700" height="400"/>
+
+  成功得到堆栈踪迹信息后，VSCode 会弹出提示信息窗口。
+
+<img src="images/stackInfo.png" alt="run the program" width="700" height="400"/>
 
 3. 在右键选项中选择 `Predict this Java crash` 。
 
@@ -46,7 +50,7 @@
 ## 版本信息
 
 ### 0.0.4
-更新 CraTer jar包与修改剪切板读取逻辑。
+更新 CraTer jar包，修改剪切板读取逻辑并使用 css 渲染输出窗口。
 
 ### 0.0.3
 
