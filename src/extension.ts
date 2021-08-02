@@ -129,8 +129,9 @@ export function getWebViewHTML(stdout: any, stderr: any, styleSrc: vscode.Uri): 
 
 	if(stderr){  // 异常的结果
 		tempHTML += `<div style='font-size:15px'>
-						<h3>3.Prediction Results: </h3>
-						<p>Oops, CraTer failed to make the prediction of this crash. Please try to check the format of arguments.</p></div>`;
+						<p>Oops, CraTer failed to make the prediction of this crash. 
+						Here is error infomation: ${stderr} <br>
+						Please try to check the format of arguments.</p></div>`;
 	}
 
 	tempHTML += `<hr><p style='color:gray'>* This results are for reference only, and the real position of the crashing fault may be not consistent with the prediction results.<br> 
